@@ -1,0 +1,10 @@
+langchain
+langgraph
+langchain-community
+chromadb
+duckdb
+sqlglot
+fastapi
+uvicorn
+streamlit
+pytest

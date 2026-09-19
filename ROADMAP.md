@@ -1,0 +1,22 @@
+# Roadmap
+
+- [ ] Project skeleton (pyproject/requirements, src layout, tests)
+- [ ] Sample e-commerce dataset loaded into DuckDB
+- [ ] Schema documentation generator (auto-extract table/column descriptions)
+- [ ] Embed schema docs into a Chroma vector store
+- [ ] Retrieval chain: question -> relevant schema snippets
+- [ ] Text-to-SQL prompt template with few-shot examples
+- [ ] SQL validator (read-only, single statement, row limit enforced)
+- [ ] Sandbox execution against DuckDB
+- [ ] LangGraph loop: generate SQL -> execute -> self-correct on error
+- [ ] Conversation memory for follow-up questions
+- [ ] CLI interface (`data-copilot ask "..."`)
+- [ ] FastAPI wrapper exposing POST /ask
+- [ ] Evaluation harness: NL questions + expected SQL, accuracy scoring
+- [ ] Local tracing/logging of each agent step
+- [ ] Unit tests for the SQL validator
+- [ ] Streamlit chat UI
+- [ ] Multi-dialect support via SQLGlot (Snowflake/Postgres)
+- [ ] Result caching layer for repeated questions
+- [ ] Architecture README with sequence diagram
+- [ ] Docker packaging
