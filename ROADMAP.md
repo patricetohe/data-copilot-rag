@@ -20,3 +20,5 @@
 - [ ] Result caching layer for repeated questions
 - [ ] Architecture README with sequence diagram
 - [ ] Docker packaging
+
+- [x] GitHub Actions CI: run unit tests on every PR
