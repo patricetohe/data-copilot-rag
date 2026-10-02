@@ -1,7 +1,7 @@
 # Roadmap
 
 - [x] Project skeleton (pyproject/requirements, src layout, tests)
-- [ ] Sample e-commerce dataset loaded into DuckDB
+- [x] Sample e-commerce dataset loaded into DuckDB
 - [ ] Schema documentation generator (auto-extract table/column descriptions)
 - [ ] Embed schema docs into a Chroma vector store
 - [ ] Retrieval chain: question -> relevant schema snippets
