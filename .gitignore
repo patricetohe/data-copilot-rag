@@ -9,3 +9,4 @@ chroma_db/
 .env
 .ipynb_checkpoints/
 .pytest_cache/
+*.duckdb.wal

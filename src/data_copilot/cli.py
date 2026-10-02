@@ -1,8 +1,9 @@
-"""Minimal CLI entry point placeholder.
+"""Minimal CLI entry point for Data Copilot.
 
 Full `data-copilot ask "..."` behavior lands with the retrieval/generation
-chain (see ROADMAP.md); for now this wires the console script and prints
-the resolved settings so the skeleton is verifiable end-to-end.
+chain (see ROADMAP.md). For now this wires the console script, prints the
+resolved settings, and can load the sample e-commerce warehouse into DuckDB
+via `data-copilot load-sample-data`.
 """
 from __future__ import annotations
 
@@ -10,12 +11,30 @@ import argparse
 import sys
 
 from data_copilot.config import get_settings
+from data_copilot.data_loader import load_sample_warehouse, table_row_counts
+
+
+def _run_load_sample_data() -> int:
+    settings = get_settings()
+    db_path = load_sample_warehouse(settings=settings)
+    print(f"[data-copilot] sample warehouse loaded at: {db_path}")
+    for table, count in table_row_counts(settings=settings).items():
+        print(f"  {table:<12} {count} rows")
+    return 0
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="data-copilot", description="Natural-language-to-SQL agent (WIP).")
     parser.add_argument("question", nargs="?", help="Question to ask the copilot (not yet implemented).")
+    parser.add_argument(
+        "--load-sample-data",
+        action="store_true",
+        help="Generate and load the sample e-commerce dataset into DuckDB, then exit.",
+    )
     args = parser.parse_args(argv)
+
+    if args.load_sample_data:
+        return _run_load_sample_data()
 
     settings = get_settings()
     if args.question:
