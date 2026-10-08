@@ -2,7 +2,7 @@
 
 - [x] Project skeleton (pyproject/requirements, src layout, tests)
 - [x] Sample e-commerce dataset loaded into DuckDB
-- [ ] Schema documentation generator (auto-extract table/column descriptions)
+- [x] Schema documentation generator (auto-extract table/column descriptions)
 - [ ] Embed schema docs into a Chroma vector store
 - [ ] Retrieval chain: question -> relevant schema snippets
 - [ ] Text-to-SQL prompt template with few-shot examples
