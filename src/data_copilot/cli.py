@@ -15,6 +15,7 @@ import sys
 from data_copilot.config import get_settings
 from data_copilot.data_loader import load_sample_warehouse, table_row_counts
 from data_copilot.schema_docs import write_schema_docs
+from data_copilot.vector_store import embed_schema_docs
 
 
 def _run_load_sample_data() -> int:
@@ -37,6 +38,17 @@ def _run_generate_schema_docs() -> int:
     return 0
 
 
+def _run_embed_schema_docs() -> int:
+    settings = get_settings()
+    try:
+        collection = embed_schema_docs(settings=settings)
+    except FileNotFoundError as error:
+        print(f"[data-copilot] {error}", file=sys.stderr)
+        return 1
+    print(f"[data-copilot] embedded {collection.count()} table(s) into the Chroma vector store at: {settings.vector_store_dir}")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="data-copilot", description="Natural-language-to-SQL agent (WIP).")
     parser.add_argument("question", nargs="?", help="Question to ask the copilot (not yet implemented).")
@@ -50,6 +62,11 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Introspect the sample warehouse and write auto-generated schema docs, then exit.",
     )
+    parser.add_argument(
+        "--embed-schema-docs",
+        action="store_true",
+        help="Generate schema docs and embed them into the Chroma vector store, then exit.",
+    )
     args = parser.parse_args(argv)
 
     if args.load_sample_data:
@@ -57,6 +74,9 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.generate_schema_docs:
         return _run_generate_schema_docs()
+
+    if args.embed_schema_docs:
+        return _run_embed_schema_docs()
 
     settings = get_settings()
     if args.question:
