@@ -17,13 +17,14 @@ jobs:
           python-version: "3.11"
           cache: "pip"
 
-      # Scoped to what the current unit tests need (tests/test_config.py
-      # only touches stdlib via src/data_copilot/config.py, resolved through
-      # pyproject.toml's [tool.pytest.ini_options] pythonpath), not the full
-      # LangChain/Chroma stack in pyproject.toml's dependencies — keeps CI
-      # fast and reliable. Expand as roadmap items add real functionality.
+      # Scoped to what the current unit tests need: pytest, duckdb (sample
+      # warehouse + schema introspection) and chromadb (schema doc
+      # embeddings), not the full LangChain/LangGraph/FastAPI/Streamlit
+      # stack in pyproject.toml's dependencies — keeps CI fast and
+      # reliable. Expand as later roadmap items bring in real LLM/chain
+      # usage.
       - name: Install test dependencies
-        run: pip install pytest
+        run: pip install pytest duckdb chromadb
 
       - name: Run unit tests
         run: pytest -q
