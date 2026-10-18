@@ -15,6 +15,7 @@ import sys
 from data_copilot.config import get_settings
 from data_copilot.data_loader import load_sample_warehouse, table_row_counts
 from data_copilot.schema_docs import write_schema_docs
+from data_copilot.retriever import retrieve_context
 from data_copilot.vector_store import embed_schema_docs
 
 
@@ -49,6 +50,14 @@ def _run_embed_schema_docs() -> int:
     return 0
 
 
+def _run_retrieve_context(question: str) -> int:
+    settings = get_settings()
+    context = retrieve_context(question, settings=settings)
+    print(f"[data-copilot] schema context for: {question!r}\n")
+    print(context)
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="data-copilot", description="Natural-language-to-SQL agent (WIP).")
     parser.add_argument("question", nargs="?", help="Question to ask the copilot (not yet implemented).")
@@ -67,6 +76,11 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Generate schema docs and embed them into the Chroma vector store, then exit.",
     )
+    parser.add_argument(
+        "--retrieve-context",
+        metavar="QUESTION",
+        help="Retrieve and print the schema snippets relevant to QUESTION, then exit.",
+    )
     args = parser.parse_args(argv)
 
     if args.load_sample_data:
@@ -77,6 +91,9 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.embed_schema_docs:
         return _run_embed_schema_docs()
+
+    if args.retrieve_context:
+        return _run_retrieve_context(args.retrieve_context)
 
     settings = get_settings()
     if args.question:

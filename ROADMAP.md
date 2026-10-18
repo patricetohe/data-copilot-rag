@@ -4,7 +4,7 @@
 - [x] Sample e-commerce dataset loaded into DuckDB
 - [x] Schema documentation generator (auto-extract table/column descriptions)
 - [x] Embed schema docs into a Chroma vector store
-- [ ] Retrieval chain: question -> relevant schema snippets
+- [x] Retrieval chain: question -> relevant schema snippets
 - [ ] Text-to-SQL prompt template with few-shot examples
 - [ ] SQL validator (read-only, single statement, row limit enforced)
 - [ ] Sandbox execution against DuckDB
