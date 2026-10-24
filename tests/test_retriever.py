@@ -111,6 +111,29 @@ def test_retrieve_context_returns_rendered_schema_for_table(embedded_settings):
     assert "Primary key" in context
 
 
+def test_cli_build_prompt_flag(tmp_path, monkeypatch, capsys):
+    monkeypatch.setenv("DATA_COPILOT_DATA_DIR", str(tmp_path / "data"))
+    monkeypatch.setenv("DATA_COPILOT_VECTOR_DIR", str(tmp_path / "data" / "chroma"))
+    monkeypatch.setenv("DATA_COPILOT_DUCKDB_PATH", str(tmp_path / "data" / "warehouse.duckdb"))
+
+    from data_copilot.cli import main
+    from data_copilot.config import get_settings
+    from data_copilot.data_loader import load_sample_warehouse
+    from data_copilot.vector_store import embed_schema_docs
+
+    settings = get_settings()
+    load_sample_warehouse(settings=settings)
+    embed_schema_docs(settings=settings)
+
+    exit_code = main(["--build-prompt", "customer email address"])
+    captured = capsys.readouterr()
+
+    assert exit_code == 0
+    assert "text-to-SQL prompt for" in captured.out
+    assert "[SYSTEM]" in captured.out
+    assert "## Table: customers" in captured.out
+
+
 def test_cli_retrieve_context_flag(tmp_path, monkeypatch, capsys):
     monkeypatch.setenv("DATA_COPILOT_DATA_DIR", str(tmp_path / "data"))
     monkeypatch.setenv("DATA_COPILOT_VECTOR_DIR", str(tmp_path / "data" / "chroma"))
