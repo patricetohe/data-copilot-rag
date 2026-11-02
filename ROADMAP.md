@@ -6,7 +6,7 @@
 - [x] Embed schema docs into a Chroma vector store
 - [x] Retrieval chain: question -> relevant schema snippets
 - [x] Text-to-SQL prompt template with few-shot examples
-- [ ] SQL validator (read-only, single statement, row limit enforced)
+- [x] SQL validator (read-only, single statement, row limit enforced)
 - [ ] Sandbox execution against DuckDB
 - [ ] LangGraph loop: generate SQL -> execute -> self-correct on error
 - [ ] Conversation memory for follow-up questions
