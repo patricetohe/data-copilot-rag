@@ -17,6 +17,7 @@ from data_copilot.data_loader import load_sample_warehouse, table_row_counts
 from data_copilot.schema_docs import write_schema_docs
 from data_copilot.prompt import build_prompt
 from data_copilot.retriever import retrieve_context
+from data_copilot.sandbox import run_query_in_sandbox
 from data_copilot.vector_store import embed_schema_docs
 
 
@@ -68,6 +69,20 @@ def _run_build_prompt(question: str) -> int:
     return 0
 
 
+def _run_sandbox_query(sql: str) -> int:
+    settings = get_settings()
+    result = run_query_in_sandbox(sql, settings=settings)
+    if not result.ok:
+        print(f"[data-copilot] sandbox query failed: {result.error}", file=sys.stderr)
+        return 1
+    print(f"[data-copilot] sandbox result for: {result.sql!r}\n")
+    print(result.columns)
+    for row in result.rows:
+        print(row)
+    print(f"\n[data-copilot] {result.row_count} row(s) in {result.elapsed_ms:.1f}ms" + (" (truncated)" if result.truncated else ""))
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="data-copilot", description="Natural-language-to-SQL agent (WIP).")
     parser.add_argument("question", nargs="?", help="Question to ask the copilot (not yet implemented).")
@@ -92,6 +107,11 @@ def main(argv: list[str] | None = None) -> int:
         help="Retrieve and print the schema snippets relevant to QUESTION, then exit.",
     )
     parser.add_argument(
+        "--run-sql",
+        metavar="SQL",
+        help="Execute SQL read-only against the sample warehouse in the sandbox, then exit.",
+    )
+    parser.add_argument(
         "--build-prompt",
         metavar="QUESTION",
         help="Retrieve schema context for QUESTION and print the full few-shot text-to-SQL prompt, then exit.",
@@ -109,6 +129,9 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.retrieve_context:
         return _run_retrieve_context(args.retrieve_context)
+
+    if args.run_sql:
+        return _run_sandbox_query(args.run_sql)
 
     if args.build_prompt:
         return _run_build_prompt(args.build_prompt)
